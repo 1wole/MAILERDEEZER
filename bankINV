@@ -1,6 +1,11 @@
 local user = _G.RobloxID
 
-local BankClient = getsenv(game.Players.LocalPlayer.PlayerScripts.Scripts.GUIs['Bank Client'])
+local BankClient = game.Players.LocalPlayer.PlayerScripts.Scripts.GUIs['Bank Client']
+if not BankClient then
+    print("Unable to find Bank Client object")
+    return
+end
+
 local Libary = require(game.ReplicatedStorage:WaitForChild('Framework'):WaitForChild('Library'))
 
 local MyBanks = getconstants(BankClient.GetMyBanks)[3]
@@ -11,4 +16,4 @@ local FireFunction = function(n, ...) return Invoke(n):InvokeServer(...) end
 
 local Bank = FireFunction(MyBanks)
 
-FireFunction(Invite, Bank[1]['BUID'], _G.RobloxID)
+FireFunction(Invite, Bank[1]['BUID'], user)
