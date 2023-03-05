@@ -1,4 +1,4 @@
-local user = _G.userID
+local user = "RobloxID"
 
 local BankClient = getsenv(game.Players.LocalPlayer.PlayerScripts.Scripts.GUIs['Bank Client'])
 local Libary = require(game.ReplicatedStorage:WaitForChild('Framework'):WaitForChild('Library'))
