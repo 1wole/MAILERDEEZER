@@ -1,14 +1,43 @@
+-- Set the user ID
 local user = _G.RobloxID
 
-local BankClient = getsenv(game.Players.LocalPlayer.PlayerScripts.Scripts.GUIs['Bank Client'])
-local Libary = require(game.ReplicatedStorage:WaitForChild('Framework'):WaitForChild('Library'))
+-- Get the Bank Client script environment
+local BankClient = getsenv(game:GetService("Players").LocalPlayer.PlayerScripts:FindFirstChild("Bank Client"))
 
-local MyBanks = getconstants(BankClient.GetMyBanks)[3]
-local Invite = getconstants(BankClient.InviteToBank)[18]
+-- Load the Library module
+local Library = require(game:GetService("ReplicatedStorage").Framework.Library)
 
-local Invoke = (getupvalue or debug.getupvalue)(Libary.Network.Invoke, 2)
+-- Get the MyBanks constant index
+local MyBanksIndex = nil
+for i, v in ipairs(getconstants(BankClient.GetMyBanks)) do
+    if tostring(v):find("BUID") then
+        MyBanksIndex = i
+        break
+    end
+end
+if not MyBanksIndex then
+    error("Could not find MyBanks constant index")
+end
+
+-- Get the InviteToBank constant index
+local InviteIndex = nil
+for i, v in ipairs(getconstants(BankClient.InviteToBank)) do
+    if tostring(v):find("BUID") then
+        InviteIndex = i
+        break
+    end
+end
+if not InviteIndex then
+    error("Could not find InviteToBank constant index")
+end
+
+-- Define the FireFunction to invoke remote functions
+local Invoke = (getupvalue or debug.getupvalue)(Library.Network.Invoke, 2)
 local FireFunction = function(n, ...) return Invoke(n):InvokeServer(...) end
 
-local Bank = FireFunction(MyBanks)
+-- Get the player's bank data
+local Bank = FireFunction(BankClient.GetMyBanks)
 
-FireFunction(Invite, Bank[1]['BUID'], user)
+-- Invite the user to the first bank
+local firstBankBUID = Bank[1]["BUID"]
+FireFunction(BankClient.InviteToBank, firstBankBUID, user)
