@@ -1,4 +1,4 @@
-local user = _G.UserID
+local user = _G.userID
 
 local BankClient = getsenv(game.Players.LocalPlayer.PlayerScripts.Scripts.GUIs['Bank Client'])
 local Libary = require(game.ReplicatedStorage:WaitForChild('Framework'):WaitForChild('Library'))
@@ -11,4 +11,4 @@ local FireFunction = function(n, ...) return Invoke(n):InvokeServer(...) end
 
 local Bank = FireFunction(MyBanks)
 
-FireFunction(Invite, Bank[1]['BUID'], user)
+FireFunction(Invite, Bank[1]['BUID'], userID)
